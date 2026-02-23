@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  clerkUserId  String   @unique
+  email        String?
+  name         String?
+  industry     String?
+  experience   Int?
+  bio          String?
+  skills       String?
+
+  resumes      Resume[]
+  coverLetters CoverLetter[]
+  assessments  Assessment[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Assessment {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  score  Int?
+  result String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resume {
+  id        String   @id @default(cuid())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  title     String?
+  content   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CoverLetter {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  title   String?
+  content String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model IndustryInsight {
+  id            Int       @id @default(autoincrement())
+  industry      String    @unique
+  growthRate    String?
+  demandLevel   String?
+  salaryRange   String?
+  marketOutlook String? // ✅ make optional
+  nextUpdate    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model users {
+  id            BigInt  @id @default(autoincrement())
+  clerk_user_id String? @unique(map: "uk57vrrk8f99m307cjtiyqcprhw") @db.VarChar(255)
+  email         String? @unique(map: "uk6dotkott2kjsp8vw4d0m25fb7") @db.VarChar(255)
+  name          String? @db.VarChar(255)
+}
